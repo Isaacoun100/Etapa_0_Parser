@@ -183,15 +183,7 @@ TOKEN_TYPES = [
 ]
 
 
-# We are converting the TOKEN_TYPES into a regular expression object (https://docs.python.org/3/library/re.html#re-objects)
-# as that is more efficient than compiling each elemnt individually according to (https://docs.python.org/3/library/re.html#functions)
-TOKEN_REGEX = [ (typ, re.compile(pat)) for typ, pat in TOKEN_TYPES ]
-
-class Token:
-    def __init__(self, type_, lexeme, line):
-        self.type = type_
-        self.lexeme = lexeme
-        self.line = line
-
-    def __repr__(self):
-        return f"Token({self.type}, '{self.lexeme}', line={self.line})"
+transition_table = {
+    "q100": { 'A': 101, 'a': 101 }, 
+    "q101": { 'S' : 102, 's' : 102 },
+}
