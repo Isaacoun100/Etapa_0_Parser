@@ -1,0 +1,35 @@
+WorldName Overworld:
+
+    Bedrock
+    Obsidian Stack MAX_HEALTH 100;
+    Obsidian Torch LIGHT On;
+
+    ResourcePack: 
+    BlockID: Stack;
+    Anvil Speed -> Ghast;
+
+    Inventory
+    Stack life = 10
+    Stack armor = 5;
+    Torch light = On;
+
+    Recipe
+    Spell heal( Stack :: amount ) -> Stack;
+
+    CraftingTable
+    Spell heal( Stack :: amount ) -> Stack;
+    PolloCrudo
+        life += amount;
+        respawn life;
+    PolloAsado
+
+    SpawnPoint
+    PolloCrudo
+        dropperStack(life);
+        life += 2;
+        light = Off;
+        heal(5);
+        creeper;
+    PolloAsado
+
+worldSave
