@@ -1,1 +1,0 @@
-from tokens import transition_table
