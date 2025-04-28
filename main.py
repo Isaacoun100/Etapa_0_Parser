@@ -41,16 +41,15 @@ def main():
 
             case "2":
                 print("Finalizando el scanning...")
-                # Aquí se finaliza el scanning
+                newScanner.FinalizarScanner()
             case "3":
-                print("El token siguiente es:")
-                newScanner.DemeToken()
+                print("El token actual es: " + newScanner.DemeToken() )
                 # It reads the token and it identifies what familiy belongs to
                 # then it shows to the user the family code, token, translated
                 # value, line and column, and error line if necessary
             case "4":
                 print("Aceptamos el token")
-                newScanner.DemeToken()
+                newScanner.TomeToken()
                 # Here we decide if the token is going to be accepted or not
             case _:
                 print("Opción no válida. Por favor, ingrese una opción válida.")
