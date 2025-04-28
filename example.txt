@@ -1,35 +1,43 @@
-WorldName Overworld:
+WorldName  MiEjemplo :
 
-    Bedrock
-    Obsidian Stack MAX_HEALTH 100;
-    Obsidian Torch LIGHT On;
+Bedrock            $$ sección de constantes
+    
+ResourcePack       $$ sección de tipos  
+   Anvil Edad -> Stack ;
+   Anvil Nombre -> Spider ;
 
-    ResourcePack: 
-    BlockID: Stack;
-    Anvil Speed -> Ghast;
+Inventory          $$ sección de variable
+   Edad MiEdad = 455 , SuEdad = 20 , J ;
+   Nombre MiNombre = "Juan";
+   Rune MiLetra = 'K', suLetra = 'A' ;
+   Shelf Rune vocales[5] = ['a','e','i','o','u'], tri[3] = ['a','b','c'] , consonantes[22], matriz[10][10][10];
+   Shelf Stack Mat3d[2][3][4] = [[[1,2,3,4],[5,6,7,8],[9,10,11,12]],[[13,14,15,16],[17,18,19,20],[21,22,23,24]]];
+   Entity
+      Spider Nombre;
+      Edad   Vejez;
+      Stack  Cedula;
+   kill Juan = {"Juan",99,111111111}, Pedro = {"peter",15,122223333} ;
 
-    Inventory
-    Stack life = 10
-    Stack armor = 5;
-    Torch light = On;
+Recipe             $$ sección de prototipos 
 
-    Recipe
-    Spell heal( Stack :: amount ) -> Stack;
+  Ritual ImprimaN(Stack :: N);
 
-    CraftingTable
-    Spell heal( Stack :: amount ) -> Stack;
-    PolloCrudo
-        life += amount;
-        respawn life;
-    PolloAsado
+CraftingTable      $$ sección de rutinas
 
-    SpawnPoint
-    PolloCrudo
-        dropperStack(life);
-        life += 2;
-        light = Off;
-        heal(5);
-        creeper;
-    PolloAsado
+  Ritual ImprimaN;   $$ como hay un prototipo los encabezados se pueden poner o no poner.
+  Inventory
+  Stack K = 0;
+  PolloCrudo
+     repeater K<N Craft
+     PolloCrudo
+        dropperStack(K);
+        soulSand K;
+     PolloAsado;
+  PolloAsado;
+  
 
-worldSave
+  
+
+SpawnPoint         $$ punto de entrada del programa
+    
+worldSave 
