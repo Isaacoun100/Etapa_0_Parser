@@ -1,6 +1,9 @@
 WorldName  MiEjemplo :
 
-Bedrock            $$ sección de constantes
+Bedrock
+
+$* sección de constantes 
+   final *$
     
 ResourcePack       $$ sección de tipos  
    Anvil Edad -> Stack ;

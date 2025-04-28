@@ -53,6 +53,27 @@ class scanner:
         while(True):
             
             self.current_token  = self.transition_table.get(self.state)
+
+            if(self.code[self.current_char] == '$' and self.code[self.current_char+1] == '$'):
+
+                self.current_char = self.current_char + 1
+
+                while(self.code[self.current_char] != '\n'):
+                    self.current_char = self.current_char + 1
+
+                return "INLINE_COMMENT"
+
+            if(self.code[self.current_char] == '$' and self.code[self.current_char+1] == '*'):
+
+                self.current_char = self.current_char + 1
+
+                while( self.current_char < len(self.code)):
+                    self.current_char = self.current_char + 1
+                    
+                    if(self.code[self.current_char] == '*' and self.code[self.current_char+1] == '$'):
+                        self.current_char = self.current_char + 2
+                        return "BLOCK_COMMENT"
+
             
             numberState = int(self.state[1:])
 
