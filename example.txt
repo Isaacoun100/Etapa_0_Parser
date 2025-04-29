@@ -11,7 +11,7 @@ ResourcePack       $$ sección de tipos
 
 Inventory          $$ sección de variable
    Edad MiEdad = 455 , SuEdad = 20 , J ;
-   Float = 23.4354;
+   Ghast = 23.4354;
    Nombre MiNombre = "Juan";
    Rune MiLetra = 'K', suLetra = 'A' ;
    Shelf Rune vocales[5] = ['a','e','i','o','u'], tri[3] = ['a','b','c'] , consonantes[22], matriz[10][10][10];
