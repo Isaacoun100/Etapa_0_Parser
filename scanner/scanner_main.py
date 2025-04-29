@@ -17,6 +17,7 @@ class scanner:
         try:
             with open(self.path, 'r') as file:
                 self.code = str(file.read())                # We read the contents from the file in the specified path
+                self.code = self.code + ' '
 
             self.current_char = 0                           # The pointer is set to the beginning of the file
             self.transition_table = tokens.transition_table # We take the tokens in from the tokens class in tokens.py
@@ -36,6 +37,7 @@ class scanner:
     # Here we close the scanning process and show the stats
     def FinalizarScanner(self):
         print (self.result)         # Prints the results of the scanning process
+        self.getStats()
         self.WallOfBricks()         # We summon the all mighty ¡WALL OF BRICKS!
 
     # DemeToken() will return the current token that its beeing analized
@@ -56,7 +58,8 @@ class scanner:
             # If it finds a space it advances to the next position and returns 'IS_SPACE'
             self.current_char = self.current_char + 1
             print(f"REJECTED: from {self.start_char} to {self.current_char}")
-            return "IS_SPACE"
+            self.current_token = "IS_SPACE"
+            return self.current_token
 
         while(True):
             
@@ -190,7 +193,6 @@ class scanner:
 
             if(self.result[x][0] == "BLOCK_COMMENT"):
                 for i in range(self.result[x][1]+adjust, self.result[x][2]+adjust):
-                    print(f'The char is {wall[i]}')
                     if(wall[i] == '\n'):
                         wall = wall[:i] + f'</span>\n{openHTML}' +  wall[i+1:]
                         adjust = adjust + 7 + len(openHTML)
@@ -224,18 +226,25 @@ class scanner:
     def insert_string(self, original, to_insert, position):
         return original[:position] + to_insert + original[position:]
 
-    # This method returns the stats for the tokens
-    # def getStats():
+    #This method returns the stats for the tokens
+    def getStats(self):
 
-    #     counter = 0 
-    #     times = 0
-    #     temp = self.result[0][0]
+        # Where we store the results
+        counter = {}
 
-    #     print(f"El código tiene {len(self.code)} caracteres")
-    #     print(f"Se aceptó en total {len(self.result)} tokens")
+        # The current list
+        stats = [ [self.result[0][0] , 0] ]
 
-    #     newList = self.result
+        print(f"El código tiene {len(self.code)} caracteres")
+        print(f"Se aceptó en total {len(self.result)} tokens")
 
-    #     while( counter < len(newList) )):
-    #         if( newList[counter][0] == temp ):
+
+        # We iterate through the items
+        for item in self.result:
+            token_type = item[0]
+            counter[token_type] = counter.get(token_type, 0) + 1
+
+        # Here it prints the results
+        for token_type, count in counter.items():
+            print(f"{token_type} aparece {count} veces")
 
