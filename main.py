@@ -20,6 +20,7 @@ Presiona:
     2. Para finalizar el scanning
     3. Para recibir el siguiente token DemeToken()
     4. Para aceptar el token TomeToke()
+    5. Escanear todo el archivo
 '''
 
 def main():
@@ -51,6 +52,16 @@ def main():
                 print("Aceptamos el token")
                 newScanner.TomeToken()
                 # Here we decide if the token is going to be accepted or not
+            case "5":
+                # This is a case to scan the whole file at once and accept it
+                while(True):
+                    try:
+                        print("El token actual es: " + newScanner.DemeToken() )
+                        newScanner.TomeToken()
+                    except:
+                        newScanner.FinalizarScanner()
+                        break
+
             case _:
                 print("Opción no válida. Por favor, ingrese una opción válida.")
                 # Aquí se maneja la opción no válida
