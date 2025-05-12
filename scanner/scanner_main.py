@@ -1,5 +1,11 @@
 from scanner import tokens              # Here we import the tokens
 
+
+# Scanner version 1.1
+# Changelog: The previous scanner didn't quite follow the structure to implement
+# the parser, so we modified the logic of the scanner to it follows what the methos
+# DemeToken, TomeToken, DemeCaracter and TomeCaracter has to do according to the theory
+# that way we can implement the pseudocode provided.
 class scanner:
     def __init__(self, path):
         self.path = path                # Where the code is
@@ -16,12 +22,15 @@ class scanner:
     def InicializarScanner(self):
         try:
             with open(self.path, 'r') as file:
-                self.code = str(file.read())                # We read the contents from the file in the specified path
-                self.code = self.code + ' '
+                # We read the contents from the file in the specified path
+                self.code = file.read() + ' '
 
-            self.current_char = 0                           # The pointer is set to the beginning of the file
-            self.transition_table = tokens.transition_table # We take the tokens in from the tokens class in tokens.py
+            # The pointer is set to the beginning of the file
+            self.current_char = 0
+            # We take the tokens in from the tokens class in tokens.py
+            self.transition_table = tokens.transition_table
 
+        # Error management
         except FileNotFoundError:
             print("There was an error opening the file, please try again")
         except PermissionError:
@@ -31,14 +40,24 @@ class scanner:
 
     # This function will return the next character from the code
     def DemeElSiguienteCaracter(self):
-        self.state = self.transition_table.get(self.state).get(self.code[self.current_char])    # State changed to the next
-        self.current_char = self.current_char + 1                                               # Moves to the next character
+        # Checks if the next character is out of index, returns None if true
+        if self.current_char >= len(self.code):
+            self.state = None
+            return
+        char = self.code[self.current_char]
+        self.state = self.transition_table.get(self.state, {}).get(char)
+        self.current_char += 1
+
+    # Jumps to the next character in the code
+    def TomeEsteCaracter(self):
+        self.current_char += 1
 
     # Here we close the scanning process and show the stats
     def FinalizarScanner(self):
-        print (self.result)         # Prints the results of the scanning process
+        # Prints the results of the scanning process
         self.getStats()
-        self.WallOfBricks()         # We summon the all mighty ¡WALL OF BRICKS!
+        # We summon the all mighty ¡WALL OF BRICKS!
+        self.WallOfBricks()
 
     # DemeToken() will return the current token that its beeing analized
     def DemeToken(self):
@@ -49,101 +68,116 @@ class scanner:
         # We return to the initial state
         self.state = "q130"
 
-        # We save the char where we at        
+        # We save the char where we at 
         self.start_char = self.current_char
 
-        # Checks if the character is an empty space (\t, \n, \s)
-        if(self.code[self.current_char].isspace()):
-
-            # If it finds a space it advances to the next position and returns 'IS_SPACE'
-            self.current_char = self.current_char + 1
-            print(f"REJECTED: from {self.start_char} to {self.current_char}")
-            self.current_token = "IS_SPACE"
+        # Checks if the character is an empty space (\t, \n)
+        if self.es_espaciador():
             return self.current_token
 
-        while(True):
-            
+        # We check if the current char is a possible comment
+        if self.reconocer_comentario():
+            return self.current_token
+
+
+        while True:
+
             # Sets the current state
-            self.current_token  = self.transition_table.get(self.state)
+            self.current_token = self.transition_table.get(self.state)
 
-            # Here we try to check if the token is an in line comment
-            if(self.code[self.current_char] == '$' and self.code[self.current_char+1] == '$'):
-
-                # It moves a space forwards
-                self.current_char = self.current_char + 1
-
-                # Loops untill it finds the end of the line and advances the reader
-                while(self.code[self.current_char] != '\n'):
-                    # Add one for each step untill it finds \t
-                    self.current_char = self.current_char + 1
-
-                # Returns the 'IN_LINE_COMMENT tokent
-                self.current_token = "INLINE_COMMENT"
-                return self.current_token
-
-            # Here we try to check if the token is a block comment
-            if(self.code[self.current_char] == '$' and self.code[self.current_char+1] == '*'):
-
-                # We add a value to get to the next token
-                self.current_char = self.current_char + 1
-
-                # It iterates between the characters untill it finds *$
-                while( self.current_char < len(self.code)):
-
-                    # We add a value to get to the next token
-                    self.current_char = self.current_char + 1
-                    
-                    # Checks if the end of the value is a BLOCK_COMMENT
-                    if(self.code[self.current_char] == '*' and self.code[self.current_char+1] == '$'):
-                        # Jumps two chars to get to the end of the block comment
-                        self.current_char = self.current_char + 2
-
-                        # Returns the token name
-                        self.current_token = "BLOCK_COMMENT"
-                        return self.current_token
-
-            # Checks if the number is an accepted state (State under 130)
-            numberState = int(self.state[1:])
-
-            # Checks if the current state is on the accepted states
-            if(numberState < 130): 
-
+            # Checks if the current state we are in is an accept state
+            if (int(self.state[1:]) < 130):
+                
                 # Return the accepted token state
                 print(f"ACCEPTED: {self.state} from {self.start_char} to {self.current_char}")
                 
-                if((self.current_char - self.start_char) > 1):
-                    self.current_char = self.current_char - 1
+                if (self.current_char - self.start_char > 1):
+                    # We return a position to evaluate from the start next time
+                    self.current_char -= 1
 
+                # We set the current state
+                self.current_token = self.transition_table[self.state]
                 return self.current_token
-            
+
+
+            # If its not an accepted state then it cycles through the states
+            valid_char = self.code[self.current_char]
+            state_return = self.current_token.get(valid_char)
+
+            #Checks if the current state exists, this is possible because the stateReturn returns None if there is no value
+            if (state_return):
+                self.DemeElSiguienteCaracter()
+
+            # Identifies an id and it sends the user to check if its a possible ID
+            elif valid_char.isalpha() or valid_char == '_':
+                self.state = "q700"
             else:
+                 # If none of the previuos conditions are met then there is an error and so it returns an error token
+                self.marcar_error()
+                return self.current_token
 
-                # If its not an accepted state then it cycles through the states
-                validChar = self.code[self.current_char]
-                stateReturn = self.current_token.get(validChar)
-                
-                #Checks if the current state exists, this is possible because the stateReturn returns None if there is no value
-                if(stateReturn):
-                    self.DemeElSiguienteCaracter()
-                else:
 
-                    # Identifies an id and it sends the user to check if its a possible ID
-                    if(validChar.isalpha() or validChar == '_' ):
-                        self.state = "q700"
-                        
-                    else:
-                        # If none of the previuos conditions are met then there is an error and so it returns an error token
-                        self.current_char = self.current_char + 1
-                        print(f"ERROR: {self.state} from {self.start_char} to {self.current_char}")
-                        self.current_token = "ERROR_TOKEN"
-                        return self.current_token
+    # This function checks if the character we are checking is a space
+    def es_espaciador(self):
+        if self.code[self.current_char].isspace():
+            self.TomeEsteCaracter()
+            print(f"REJECTED: from {self.start_char} to {self.current_char}")
+            self.current_token = "IS_SPACE"
+            return True
+        return False
 
-    # If the user accepts the token then we will be adding it to the result
+    # This function checks if the character we have can or may be a comment
+    def reconocer_comentario(self):
+        if self.code[self.current_char:self.current_char+2] == '$$':
+            self.TomeEsteCaracter()
+            while self.code[self.current_char] != '\n':
+                self.TomeEsteCaracter()
+            self.current_token = "INLINE_COMMENT"
+            return True
+
+        if self.code[self.current_char:self.current_char+2] == '$*':
+            self.TomeEsteCaracter()
+            while self.current_char < len(self.code):
+                self.TomeEsteCaracter()
+                if self.code[self.current_char:self.current_char+2] == '*$':
+                    self.current_char += 2
+                    self.current_token = "BLOCK_COMMENT"
+                    return True
+        return False
+
+
+    # Print the current error found and continues with the scanning
+    def marcar_error(self):
+        self.TomeEsteCaracter()
+        print(f"ERROR: {self.state} from {self.start_char} to {self.current_char}")
+        self.current_token = "ERROR_TOKEN"
+    
+    # If the user accepts the token then we will be adding it to the result 
     def TomeToken(self):
-        self.result.append( [self.current_token, self.start_char, self.current_char] )
 
+        # Isolates the lexeme that we are checking
+        lexema = self.code[self.start_char:self.current_char]
+        token_info = {
+            'familia': self.current_token,
+            'lexema': lexema,
+            'fila': self.get_row(self.start_char),
+            'col_inicio': self.start_char,
+            'col_fin': self.current_char - 1
+        }
+        self.result.append(token_info)
 
+    # Returns the row that we are in at the moment of the scanning
+    def get_row(self, index):
+        return self.code[:index].count('\n') + 1
+
+    # Returns the column that we are in at the moment of scanning
+    def get_col(self, index):
+        last_nl = self.code[:index].rfind('\n')
+        return index - last_nl
+
+    # Formats the provided token into a pretty string to more easily check what lexeme we are in
     def getLetter(self, text, letter_index):
+
         # Normalize all newlines to '\n'
         normalized_text = text.replace('\r\n', '\n').replace('\r', '\n')
 
@@ -152,8 +186,6 @@ class scanner:
 
         # Split into lines
         lines = normalized_text.split('\n')
-
-        # Find which line contains the letter
         count = 0
         for i, line in enumerate(lines):
             if count + len(line) >= letter_index:
@@ -168,57 +200,44 @@ class scanner:
 
             # Move past this line plus one for the '\n'
             count += len(line) + 1
-
         return "Letter not found in lines."
 
-    # The wall of bricks will display the stats of the scanned code in HTML
-    def WallOfBricks(self): 
-        
-        # This is the result code (The original is not adited)
+
+    # The wall of bricks will display the stats of the scanned code in HTML format
+    def WallOfBricks(self):
+
+        # This is the result code (So the original is not edited)
         wall = self.code
 
         # The offset every time we add a new value
         adjust = 0
 
-        # Counter
-        x = 0
-
         #Checks all of the entries in the result array
-        while(x < len(self.result)):
+        for token in self.result:
 
             # Add the line of code that changes the color, to avoid a separate list the color comes from the token name converted to hex
-            openHTML = f'<span style="background-color:{self.string_to_hex_color(self.result[x][0])}">'
-            wall = self.insert_string(wall, openHTML , self.result[x][1]+adjust)
-            adjust = adjust + 39
-
-            if(self.result[x][0] == "BLOCK_COMMENT"):
-                for i in range(self.result[x][1]+adjust, self.result[x][2]+adjust):
-                    if(wall[i] == '\n'):
-                        wall = wall[:i] + f'</span>\n{openHTML}' +  wall[i+1:]
-                        adjust = adjust + 7 + len(openHTML)
-
-            wall = self.insert_string(wall, '</span>', self.result[x][2]+adjust)
-            adjust = adjust + 7
-
-            x = x + 1
-
+            openHTML = f'<span style="background-color:{self.string_to_hex_color(token["familia"])}">'
+            wall = self.insert_string(wall, openHTML, token['col_inicio'] + adjust)
+            adjust += len(openHTML)
+            wall = self.insert_string(wall, '</span>', token['col_fin'] + adjust + 1)
+            adjust += len('</span>')
         wall = "<h3>" + wall.replace('\n', "</h3>\n<h3>") + "</h3>"
-        
         with open('result.html', 'w') as f:
-             f.write(wall)
-    
+            f.write(wall)
+
+    # Takes the name of the familiy of tokens and it converts it into a hex color value
     def string_to_hex_color(self, s):
         # Limit to 20 characters
         s = s[:20]
-        
+
         # Create a simple hash by summing ASCII values
         hash_value = sum(ord(c) for c in s)
-        
+
         # Use hash to generate RGB components
         r = (hash_value * 123) % 256
         g = (hash_value * 456) % 256
         b = (hash_value * 789) % 256
-        
+
         # Format as hex color
         return "#{:02X}{:02X}{:02X}".format(r, g, b)
 
@@ -231,20 +250,15 @@ class scanner:
 
         # Where we store the results
         counter = {}
-
-        # The current list
-        stats = [ [self.result[0][0] , 0] ]
-
+        
         print(f"El código tiene {len(self.code)} caracteres")
         print(f"Se aceptó en total {len(self.result)} tokens")
 
-
         # We iterate through the items
         for item in self.result:
-            token_type = item[0]
-            counter[token_type] = counter.get(token_type, 0) + 1
+            familia = item['familia']
+            counter[familia] = counter.get(familia, 0) + 1
 
         # Here it prints the results
-        for token_type, count in counter.items():
-            print(f"{token_type} aparece {count} veces")
-
+        for familia, count in counter.items():
+            print(f"{familia} aparece {count} veces")
