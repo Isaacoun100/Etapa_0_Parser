@@ -62,6 +62,12 @@ class scanner:
     # DemeToken() will return the current token that its beeing analized
     def DemeToken(self):
 
+        print(len(self.code))
+        print(self.current_char)
+
+        if(self.current_char+1 >= len(self.code)):
+            return self.isEOF()
+
         # Using the getLetter funtion prints the current char that we are analyzing in a pretty format
         print(self.getLetter(self.code, self.current_char))
 
@@ -72,12 +78,20 @@ class scanner:
         self.start_char = self.current_char
 
         # Checks if the character is an empty space (\t, \n)
-        if self.es_espaciador():
-            return self.current_token
+        #if self.es_espaciador():
+        #    return self.tokenInfo()
+
+        while(self.es_espaciador()):
+            self.start_char += 1
+            self.current_char += 1
+
+            if(self.current_char+1 >= len(self.code)):
+                return self.isEOF()
+
 
         # We check if the current char is a possible comment
         if self.reconocer_comentario():
-            return self.current_token
+            return self.tokenInfo()
 
 
         while True:
@@ -97,7 +111,7 @@ class scanner:
 
                 # We set the current state
                 self.current_token = self.transition_table[self.state]
-                return self.current_token
+                return self.tokenInfo()
 
 
             # If its not an accepted state then it cycles through the states
@@ -114,14 +128,14 @@ class scanner:
             else:
                  # If none of the previuos conditions are met then there is an error and so it returns an error token
                 self.marcar_error()
-                return self.current_token
+                return self.tokenInfo()
 
 
     # This function checks if the character we are checking is a space
     def es_espaciador(self):
         if self.code[self.current_char].isspace():
-            self.TomeEsteCaracter()
-            print(f"REJECTED: from {self.start_char} to {self.current_char}")
+            #self.TomeEsteCaracter()
+            print(f"REJECTED: from {self.start_char} to {self.current_char} char is a space")
             self.current_token = "IS_SPACE"
             return True
         return False
@@ -153,18 +167,34 @@ class scanner:
         self.current_token = "ERROR_TOKEN"
     
     # If the user accepts the token then we will be adding it to the result 
-    def TomeToken(self):
+
+    def isEOF(self):
+        return {
+            'familia': 'EOF',
+            'lexema': 'EOF',
+            'fila': self.get_row(self.start_char),
+            'col_inicio': self.start_char,
+            'col_fin': self.current_char - 1
+            }
+
+    def tokenInfo(self): 
 
         # Isolates the lexeme that we are checking
         lexema = self.code[self.start_char:self.current_char]
-        token_info = {
+
+        # Returns an object with the details of the scanner token
+        return {
             'familia': self.current_token,
             'lexema': lexema,
             'fila': self.get_row(self.start_char),
             'col_inicio': self.start_char,
             'col_fin': self.current_char - 1
         }
-        self.result.append(token_info)
+
+        
+
+    def TomeToken(self):
+        self.result.append(self.tokenInfo())
 
     # Returns the row that we are in at the moment of the scanning
     def get_row(self, index):
@@ -256,7 +286,7 @@ class scanner:
 
         # We iterate through the items
         for item in self.result:
-            familia = item['familia']
+            familia = item.get('familia')
             counter[familia] = counter.get(familia, 0) + 1
 
         # Here it prints the results
