@@ -5,7 +5,7 @@ from parser.tables_access import TablaParsing, LadosDerechos, TablaFamilia, NO_T
 token_EOF = 52
 simbolo_inicial = 0
 
-
+# Checks if the current family belongs to the TablaFamilia
 def es_terminal(codigo):
     if TablaFamilia.get(codigo):
         return True
@@ -14,16 +14,22 @@ def es_terminal(codigo):
 
 # Parser LL(1)
 def parse(scanner):
-    TA = scanner.DemeToken()  # Token actual
-    pila = [simbolo_inicial]  # Inicializa con el símbolo inicial <S>
+
+    # We store the current token
+    TA = scanner.DemeToken()
+
+    # The  heap is initialized
+    pila = [simbolo_inicial]  
 
     while len(pila) > 0:
 
+        #Checks if the token is a space and ommits it
         if TA['familia'] == "IS_SPACE":
             return
 
         EAP = pila.pop()
 
+        # Checks if we are in a terminal
         if es_terminal(EAP):
             if TA['familia'] == EAP:
                 TA = scanner.DemeToken()
@@ -41,12 +47,14 @@ def parse(scanner):
             if regla < 0:
                 print(f"Error sintáctico: no hay regla válida para ({EAP}, {TA['familia']})")
                 return
-            # Agregar el lado derecho de la regla a la pila (en orden inverso)
+            
+            # Checks from the right side
             for i in reversed(range(MAX_LADO_DER)):
                 simbolo = LadosDerechos[regla * MAX_LADO_DER + i]
                 if simbolo != -1:
                     pila.append(simbolo)
 
+    # Returns the error code if it finds something wrong
     if TA['familia'] != token_EOF:
         print("Error: tokens restantes después del fin de la pila")
     else:
