@@ -1,5 +1,6 @@
 from scanner.scanner_main import scanner as sc
 from scanner import tokens
+from parser import parser_main
 
 # Here we are going to design the command line interface that we will be
 # using to interact with the user
@@ -21,6 +22,7 @@ Presiona:
     3. Para recibir el siguiente token DemeToken()
     4. Para aceptar el token TomeToke()
     5. Escanear todo el archivo
+    6. Parsing process
 '''
 
 def main():
@@ -44,7 +46,7 @@ def main():
                 print("Finalizando el scanning...")
                 newScanner.FinalizarScanner()
             case "3":
-                print("El token actual es: " + newScanner.DemeToken() )
+                print("El token actual es: " + newScanner.DemeToken().get('familia') )
                 # It reads the token and it identifies what familiy belongs to
                 # then it shows to the user the family code, token, translated
                 # value, line and column, and error line if necessary
@@ -54,13 +56,19 @@ def main():
                 # Here we decide if the token is going to be accepted or not
             case "5":
                 # This is a case to scan the whole file at once and accept it
-                while(True):
-                    try:
-                        print("El token actual es: " + newScanner.DemeToken() )
-                        newScanner.TomeToken()
-                    except:
-                        newScanner.FinalizarScanner()
-                        break
+
+                token = ""
+
+                while(token!="EOF"):
+                    token = newScanner.DemeToken().get('familia')
+                    print(f'El token actual es: {token}')
+                    newScanner.TomeToken()
+
+                newScanner.FinalizarScanner()
+            
+            case "6":
+                
+                parser_main.parse(newScanner)
 
             case _:
                 print("Opción no válida. Por favor, ingrese una opción válida.")
