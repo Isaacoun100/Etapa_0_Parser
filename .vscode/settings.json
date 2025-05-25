@@ -4,5 +4,10 @@
         "plaintext": false,
         "markdown": false,
         "scminput": false
-    }
+    },
+    "[python]": {
+        "editor.formatOnSaveMode": "file",
+        "editor.defaultFormatter": "eeyore.yapf",
+        "editor.formatOnType": false
+      }
 }

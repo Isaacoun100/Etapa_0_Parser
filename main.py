@@ -58,7 +58,6 @@ def main():
                 # This is a case to scan the whole file at once and accept it
 
                 token = ""
-
                 while(token!="EOF"):
                     token = newScanner.DemeToken().get('familia')
                     print(f'El token actual es: {token}')
