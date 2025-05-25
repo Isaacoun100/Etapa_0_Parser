@@ -92,6 +92,7 @@ transition_table = {
     'q100': 'IDENTIFIER',
     'q101': 'FOULTOKEN',
     'q102': 'CLOSEPARENTHESIS',
+    'q103': 'JUKEBOX',
 
     # 'q130': Initial state
     'q130': {
