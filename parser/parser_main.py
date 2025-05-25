@@ -6,11 +6,9 @@ token_EOF = 52
 simbolo_inicial = 0
 
 # Checks if the current family belongs to the TablaFamilia
-def es_terminal(codigo):
-    if TablaFamilia.get(codigo):
-        return True
-    else:
-        return False
+def es_terminal(simbolo):
+    # simbolo es un número entero
+    return simbolo >= 100
 
 # Parser LL(1)
 def parse(scanner):
@@ -43,10 +41,14 @@ def parse(scanner):
                 print(f"Error: token con familia '{familia}' no está mapeado en TablaFamilia")
                 return
 
-            regla = TablaParsing[EAP * NO_TERMINAL_INICIAL + indice_terminal]
-            if regla < 0:
-                print(f"Error sintáctico: no hay regla válida para ({EAP}, {TA['familia']})")
+            NUM_TERMINALES = len(TablaFamilia)  # Esto da 53
+
+            regla = TablaParsing[EAP * NUM_TERMINALES + indice_terminal]
+
+            if not (0 <= regla < 61):
+                print(f"Regla inválida: {regla}")
                 return
+
             
             # Checks from the right side
             for i in reversed(range(MAX_LADO_DER)):
