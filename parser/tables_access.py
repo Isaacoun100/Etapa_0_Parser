@@ -1,8 +1,8 @@
 import ctypes
 
 # Cargar la librería compilada
-lib = ctypes.CDLL(r'source\c\libparser.dll')
-#lib = ctypes.CDLL('./libgramatica.so')  # o .dll en Windows
+#lib = ctypes.CDLL(r'source\c\libparser.dll')
+lib = ctypes.CDLL(r'source/c/libparser.so')  # o .dll en Windows
 
 # Definir constantes (asegúrate que coincidan con tus archivos .h)
 NO_TERMINAL_INICIAL = 53
