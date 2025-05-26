@@ -63,6 +63,7 @@ def main():
                     print(f'El token actual es: {token}')
                     newScanner.TomeToken()
 
+                #print(newScanner.result)
                 newScanner.FinalizarScanner()
             
             case "6":

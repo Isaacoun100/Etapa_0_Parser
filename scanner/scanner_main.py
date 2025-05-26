@@ -1,4 +1,5 @@
 from scanner import tokens  # Here we import the tokens
+import hashlib
 
 
 # Scanner version 1.1
@@ -20,6 +21,7 @@ class scanner:
 
     # This fuction is used to initialize the class, it opens the file and it assings it to the self.code
     def InicializarScanner(self):
+
         try:
             with open(self.path, 'r') as file:
                 # We read the contents from the file in the specified path
@@ -83,17 +85,17 @@ class scanner:
 
         # We check if the current char is a possible comment
         if self.reconocer_comentario():
-            return self.tokenInfo()
+            return self.DemeToken()
 
         while True:
-
-            print(self.getLetter(self.code, self.current_char))
 
             # Sets the current state
             self.current_token = self.transition_table.get(self.state)
 
             # Checks if the current state we are in is an accept state
             if (int(self.state[1:]) < 130):
+
+                print(self.getLetter(self.code, self.current_char))
 
                 # Return the accepted token state
                 print(f"ACCEPTED: {self.state} from {self.start_char} to {self.current_char}")
@@ -119,6 +121,7 @@ class scanner:
                 self.state = "q700"
             else:
                 # If none of the previuos conditions are met then there is an error and so it returns an error token
+                print(self.getLetter(self.code, self.current_char))
                 self.marcar_error()
                 return self.tokenInfo()
 
@@ -250,16 +253,15 @@ class scanner:
         # Limit to 20 characters
         s = s[:20]
 
-        # Create a simple hash by summing ASCII values
-        hash_value = sum(ord(c) for c in s)
+        # Create a hash digest (MD5 returns 16 bytes)
+        digest = hashlib.md5(s.encode('utf-8')).digest()
 
-        # Use hash to generate RGB components
-        r = (hash_value * 123) % 256
-        g = (hash_value * 456) % 256
-        b = (hash_value * 789) % 256
+        # Use first 3 bytes for RGB
+        r, g, b = digest[0], digest[1], digest[2]
 
         # Format as hex color
         return "#{:02X}{:02X}{:02X}".format(r, g, b)
+
 
     # Aux function to join strings
     def insert_string(self, original, to_insert, position):
