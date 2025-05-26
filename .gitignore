@@ -139,7 +139,7 @@ __pycache__/
 *.so
 
 # Except
-!source\c\libparser.so
+!source/c/libparser.so
 
 # Distribution / packaging
 .Python
