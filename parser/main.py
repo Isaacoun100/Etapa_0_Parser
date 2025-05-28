@@ -37,6 +37,7 @@ class main:
             "CREEPER",            
             "CREEPER",
             "POLLOASADO",
+            "SEMICOLON",
             "WORLDSAVE"
             ]
         
