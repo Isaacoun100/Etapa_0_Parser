@@ -1,6 +1,6 @@
 from scanner.scanner_main import scanner as sc
 from scanner import tokens
-from parser import parser_main
+from parser.parser_main import parser as pc
 
 # Here we are going to design the command line interface that we will be
 # using to interact with the user
@@ -63,12 +63,12 @@ def main():
                     print(f'El token actual es: {token}')
                     newScanner.TomeToken()
 
-                #print(newScanner.result)
+                print(newScanner.result)
                 newScanner.FinalizarScanner()
             
             case "6":
                 
-                parser_main.parse(newScanner)
+                newParser = pc(newScanner.result)
 
             case _:
                 print("Opción no válida. Por favor, ingrese una opción válida.")

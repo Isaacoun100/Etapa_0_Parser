@@ -14,49 +14,54 @@ Inventory $$ Declaracion de variables
     Stack counter = 0;
     Rune hello = "Hello!";
 
-Recipe
-
-    WALK counter SET 0 TO 10 STEP 1 CRAFT
-        POLLOCRUDO
-            result = firstValue * secondValue
-            firstValue = firstValue ++;
-            secondValue = secondValue --;
-        POLLOASADO
-
-    fvalue = fvalue :+300.12;
-    firstValue = 300.12 :+ _fvalue;
-
-    result += 1;
-    result += fvalue;
-    result -= 1;
-    result -= fvalue;
-    result *= 1;
-    result *= fvalue;
-    result /= 1;
-    result /= fvalue;
-    result %= 1;
-    result %= fvalue;
-
-    result = result + 5
-    result = result - 5
-    result = result * 5
-    result = result // 5
-    result = result % fvalue
-    result = result + fvalue
-    result = result - fvalue
-    result = result * fvalue
-    result = result // fvalue
-    result = result % fvalue
+SPAWNPOINT
+    POLLOCRUDO
     
-    result = result :+ 5
-    result = result :- 5
-    result = result :* 5
-    result = result :// 5
-    result = result :% fvalue
-    result = result :+ fvalue
-    result = result :- fvalue
-    result = result :* fvalue
-    result = result :// fvalue
-    result = result :% fvalue
+        $*
+        WALK counter SET 0 TO 10 STEP 1 CRAFT
+            POLLOCRUDO
+                result = firstValue * secondValue
+                firstValue = firstValue ++;
+                secondValue = secondValue --;
+            POLLOASADO
+        *$
+
+        fvalue = fvalue :+300.12;
+        firstValue = 300.12 :+ _fvalue;
+
+        result += 1;
+        result += fvalue;
+        result -= 1;
+        result -= fvalue;
+        result *= 1;
+        result *= fvalue;
+        result /= 1;
+        result /= fvalue;
+        result %= 1;
+        result %= fvalue;
+
+        result = result + 5
+        result = result - 5
+        result = result * 5
+        result = result // 5
+        result = result % fvalue
+        result = result + fvalue
+        result = result - fvalue
+        result = result * fvalue
+        result = result // fvalue
+        result = result % fvalue
+        
+        result = result :+ 5
+        result = result :- 5
+        result = result :* 5
+        result = result :// 5
+        result = result :% fvalue
+        result = result :+ fvalue
+        result = result :- fvalue
+        result = result :* fvalue
+        result = result :// fvalue
+        result = result :% fvalue
+        
+    POLLOASADO;
 
 worldSave
