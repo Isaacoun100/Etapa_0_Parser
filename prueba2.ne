@@ -12,7 +12,7 @@ Inventory $$ Declaracion de variables
 Recipe
     spell func1 (num1) -> Stack
     spell func2 (num1) -> Rune
-    ritual rut1 (str0);
+    $$ ritual rut1 (str0);
 
 CraftingTable
     RITUAL rut1 (str0)
@@ -29,4 +29,4 @@ SpawnPoint
        counter = counter - 3;
     PolloAsado;
 
-worldSave 
+worldSave

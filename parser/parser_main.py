@@ -87,11 +87,42 @@ class parser:
                 if currentStackElement[0] == '#':
                         match currentStackElement:
                             case "#crearTSG":
-                                print("=============\n      Creating Symbol table ...\n=============")
+                                print("=============\n      Creating Global Symbol table ...\n=============")
                                 self.GlobalSymbolTable = SymbolTable()
                                 self.GlobalSymbolTable.display()                                
                                 self.Stack.pop()
                                 self.Stack.show()
+                            case "#rit1":
+                                if self.GlobalSymbolTable.inFunction:
+                                    print("Error: No se puede definir una función dentro otra.")
+                                else:
+                                    self.GlobalSymbolTable.inFunction = True
+                                    print("[CTXT]: inFunction = TRUE")
+                                    self.Stack.pop()
+                                    self.Stack.show()
+                            case "#crearTSL":
+                                if self.GlobalSymbolTable.inFunction:
+                                    print("=============\n      Creating Local Symbol table ...\n=============")
+                                    self.LocalSymbolTable = SymbolTable()                               
+                                    self.Stack.pop()
+                                    self.Stack.show()
+                                else:
+                                    self.Stack.pop()
+                                    self.Stack.show()
+                            case "#eliminarTSL":
+                                if self.GlobalSymbolTable.inFunction:
+                                    self.LocalSymbolTable.destroyTb()
+                                    print("The Local Symbol Table has been deleted")
+                                    self.Stack.pop()
+                                else:
+                                    self.Stack.pop()
+                                    self.Stack.show()
+                                
+                            case "#rit2":
+                                self.GlobalSymbolTable.inFunction = False
+                                print("[CTXT]: inFunction = False \n")
+                                self.Stack.pop()
+                                    
                             case "#eliminarTSG":
                                 self.GlobalSymbolTable.destroyTb()
                                 print("The Global Symbol Table has been deleted")

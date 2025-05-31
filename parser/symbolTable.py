@@ -1,6 +1,9 @@
 class SymbolTable:
     def __init__(self):
         self._table = {}
+        
+        #Creacion de Flags y pilas para manejar las dinamicas de reconocimiento de contexto
+        self.inFunction = False
 
     def contains(self, key):
         return key in self._table
