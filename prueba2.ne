@@ -1,4 +1,4 @@
-WorldName  printNumbers :
+WorldName  craftingSection :
 
 Bedrock  $$ Aqui tenemos las constantes
 

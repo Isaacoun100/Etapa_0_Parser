@@ -3,6 +3,7 @@ from parser.Rules import Rules
 from parser.Stack import Stack
 from parser.Terminals import Terminals
 from parser.Buffer import Buffer
+from parser.symbolTable import SymbolTable
 
 # Requirements
 # Parsing table, Terminals, Buffer for the input, Stack, Definition of the rules
@@ -82,24 +83,42 @@ class parser:
                     self.nonTerminalSubsuitution(parsingRule)
                 
             else:
-                #if top of the stack contains a terminal, compare with the first element in the buffer
-                if currentBElement == currentStackElement:
-                    print("Match found!")
-                    print(self.Buffer)
-                    buffNext = self.Buffer.next()
-                    if buffNext == None:
-                        self.nextBufferLoad()
-                    
-                    self.Stack.pop()
-                    self.Stack.show()
-                    currentBElement = self.Buffer.current()
-                        
-                    if self.Stack.size() == 0:
-                        print("\n ! The input has been parsed succesfully !")
+                 #We check if it the top of the stacj reads a semantic symbol
+                if currentStackElement[0] == '#':
+                        match currentStackElement:
+                            case "#crearTSG":
+                                print("=============\n      Creating Symbol table ...\n=============")
+                                self.GlobalSymbolTable = SymbolTable()
+                                self.GlobalSymbolTable.display()                                
+                                self.Stack.pop()
+                                self.Stack.show()
+                            case "#eliminarTSG":
+                                self.GlobalSymbolTable.destroyTb()
+                                print("The Global Symbol Table has been deleted")
+                                self.Stack.pop()
+                                if self.Stack.size() == 0:
+                                    print("\n ! The input has been parsed succesfully !")
+                            case _: # basically this is default
+                                print("Other")
                 else:
-                    #ERROR case if there is no rule after reading a terminal
-                    print(f"Syntax Error: {currentBElement} is not supposed to be after {self.Stack.peekPopped()}")
-                    break
+                    #if top of the stack contains a terminal, compare with the first element in the buffer
+                    if currentBElement == currentStackElement:
+                        print("Match found!")
+                        print(self.Buffer)
+                        buffNext = self.Buffer.next()
+                        if buffNext == None:
+                            self.nextBufferLoad()
+                        
+                        self.Stack.pop()
+                        self.Stack.show()
+                        currentBElement = self.Buffer.current()
+                            
+                        if self.Stack.size() == 0:
+                            print("\n ! The input has been parsed succesfully !")
+                    else:                    
+                        #ERROR case if there is no rule after reading a terminal
+                        print(f"Syntax Error: {currentBElement} is not supposed to be after {self.Stack.peekPopped()}")
+                        break
                     
             currentStackElement = self.Stack.peek()
             print("\n")

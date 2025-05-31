@@ -1,7 +1,7 @@
 class Rules:
     def __init__(self):
         self.rules = {
-            0: ['WORLDNAME', '<id>', 'COLON', '<programa>'],
+            0: ['#crearTSG','WORLDNAME', '<id>', 'COLON', '<programa>', '#eliminarTSG'],
             1: ['IDENTIFIER', '<acceso>'],
             2: ['<seccion_de_constantes>', '<seccion_de_tipos>', '<seccion_de_variables>', '<seccion_de_prototipos>', '<seccion_de_rutinas>', '<punto_entrada_del_programa>', 'WORLDSAVE'],
             3: ['BEDROCK', '<constantes>'],
