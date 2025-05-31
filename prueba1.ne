@@ -17,14 +17,12 @@ Inventory $$ Declaracion de variables
 SPAWNPOINT
     POLLOCRUDO
     
-        $*
         WALK counter SET 0 TO 10 STEP 1 CRAFT
             POLLOCRUDO
-                result = firstValue * secondValue
-                firstValue = firstValue ++;
-                secondValue = secondValue --;
+                result = firstValue * secondValue;
+                firstValue = firstValue *3;
+                secondValue = secondValue //6;
             POLLOASADO
-        *$
 
         fvalue = fvalue :+300.12;
         firstValue = 300.12 :+ _fvalue;
@@ -40,27 +38,27 @@ SPAWNPOINT
         result %= 1;
         result %= fvalue;
 
-        result = result + 5
-        result = result - 5
-        result = result * 5
-        result = result // 5
-        result = result % fvalue
-        result = result + fvalue
-        result = result - fvalue
-        result = result * fvalue
-        result = result // fvalue
-        result = result % fvalue
+        result = result + 5 * 3;
+        result = result - 5;
+        result = result * 5;
+        result = result // 5;
+        result = result % fvalue;
+        result = result + fvalue;
+        result = result - fvalue;
+        result = result * fvalue;
+        result = result // fvalue;
+        result = result % fvalue;
         
-        result = result :+ 5
-        result = result :- 5
-        result = result :* 5
-        result = result :// 5
-        result = result :% fvalue
-        result = result :+ fvalue
-        result = result :- fvalue
-        result = result :* fvalue
-        result = result :// fvalue
-        result = result :% fvalue
+        result = result :+ 5;
+        result = result :- 5;
+        $$ result = result :* 5;
+        result = result :// 5;
+        result = result :% fvalue;
+        result = result :+ fvalue;
+        result = result :- fvalue;
+        $$ result = result :* fvalue;
+        result = result :// fvalue;
+        result = result :% fvalue;
         
     POLLOASADO;
 
